@@ -6,39 +6,42 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Login from './pages/Login';
-import Booking from './pages/Booking'; // Nouvelle page ajoutée !
+import Booking from './pages/Booking';
 
-// Pages temporaires (À remplacer par tes futurs fichiers .jsx quand ils seront prêts)
-const Dashboard = () => (
-  <div className="min-h-screen flex items-center justify-center bg-white pt-20">
-    <div className="text-center">
-      <h1 className="text-4xl font-black text-slate-800 mb-4">Tableau de Bord</h1>
-      <p className="text-slate-500">Bienvenue, Jhon. Vos rendez-vous s'afficheront ici.</p>
-    </div>
-  </div>
-);
+// Importation de l'Espace Administration
+import Dashboard from './pages/admin/Dashboard';
+import Inventory from './pages/admin/Inventory';
 
 function App() {
   return (
     /* Conteneur principal Elite avec antialiasing et sélection personnalisée */
     <div className="antialiased text-slate-900 selection:bg-blue-100 selection:text-blue-700 min-h-screen flex flex-col">
       <BrowserRouter>
-        {/* Navbar fixée en haut (z-index géré dans le composant) */}
+        {/* Navbar fixée en haut */}
         <Navbar />
         
         {/* Zone de contenu principale - flex-grow pour pousser le footer vers le bas */}
         <main className="flex-grow">
           <Routes>
-            {/* Routes principales */}
+            {/* --- ROUTES PUBLIQUES --- */}
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
             <Route path="/booking" element={<Booking />} />
             
-            {/* Accès Staff */}
+            {/* --- ACCÈS STAFF & ADMIN --- */}
             <Route path="/login" element={<Login />} />
+            
+            {/* Le Dashboard principal de l'opticien */}
             <Route path="/dashboard" element={<Dashboard />} />
             
-            {/* Erreur 404 Stylisée */}
+            {/* Gestion de l'inventaire et des tendances VTO */}
+            <Route path="/admin/inventory" element={<Inventory />} />
+
+            {/* Pages Clients (À créer prochainement) */}
+            <Route path="/admin/clients" element={<Dashboard />} /> 
+            <Route path="/admin/bookings" element={<Dashboard />} />
+            
+            {/* --- ERREUR 404 STYLISÉE --- */}
             <Route path="*" element={
               <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6">
                 <h2 className="text-[12rem] font-black text-slate-50 absolute opacity-50 select-none">404</h2>
@@ -59,7 +62,7 @@ function App() {
           </Routes>
         </main>
 
-        {/* Pied de page présent sur toutes les vues */}
+        {/* Le Footer s'affiche sur toutes les pages sauf potentiellement le dashboard si tu veux l'épurer */}
         <Footer />
       </BrowserRouter>
     </div>
