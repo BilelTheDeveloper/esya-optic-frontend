@@ -6,7 +6,6 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Effet de scroll pour changer l'apparence au défilement
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -18,15 +17,16 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Accueil', path: '/' },
     { name: 'Services', path: '/services' },
+    { name: 'Catalogue', path: '/catalogue' },
     { name: 'Mon Espace', path: '/dashboard' },
   ];
 
   return (
     <nav 
-      className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
+      className={`fixed top-0 w-full z-[100] transition-all duration-500  ${
         scrolled 
-          ? 'py-3 bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-lg shadow-blue-500/5' 
-          : 'py-5 bg-transparent'
+          ? 'py-3 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-xl shadow-blue-500/5' 
+          : 'py-6 bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6">
@@ -44,7 +44,12 @@ const Navbar = () => {
 
           {/* --- DESKTOP MENU --- */}
           <div className="hidden md:flex items-center gap-2">
-            <div className="flex items-center bg-white/40 backdrop-blur-md border border-white/50 rounded-2xl p-1.5 shadow-sm">
+            {/* Conteneur de liens avec effet Glassmorphism assorti au bloc Hero */}
+            <div className={`flex items-center backdrop-blur-md border rounded-2xl p-1.5 transition-all duration-500 ${
+              scrolled 
+                ? 'bg-slate-50/50 border-slate-200 shadow-sm' 
+                : 'bg-white/40 border-white/60 shadow-md'
+            }`}>
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
@@ -60,14 +65,14 @@ const Navbar = () => {
               ))}
             </div>
 
-            <div className="h-8 w-[1px] bg-slate-200 mx-4"></div>
+            <div className="h-8 w-[1px] bg-slate-200/50 mx-4"></div>
 
             <Link 
               to="/login" 
-              className="relative group overflow-hidden px-8 py-3 bg-slate-900 rounded-2xl font-bold text-sm text-white transition-all hover:scale-105 active:scale-95"
+              className="relative group overflow-hidden px-8 py-3 bg-slate-900 rounded-2xl font-bold text-sm text-white transition-all hover:scale-105 active:scale-95 shadow-lg shadow-slate-900/10"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10">Connexion </span>
+              <span className="relative z-10">Connexion</span>
             </Link>
           </div>
 
@@ -75,7 +80,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button 
               onClick={() => setIsOpen(!isOpen)}
-              className="p-3 bg-white rounded-xl border border-slate-100 shadow-sm text-slate-900"
+              className="p-3 bg-white/80 backdrop-blur-md rounded-xl border border-white shadow-sm text-slate-900"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isOpen ? (
@@ -88,17 +93,19 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* --- MOBILE MENU (Glass Effect) --- */}
+        {/* --- MOBILE MENU --- */}
         <div className={`md:hidden absolute left-6 right-6 mt-4 transition-all duration-500 transform ${
           isOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'
         }`}>
-          <div className="bg-white/90 backdrop-blur-2xl border border-white p-6 rounded-[2rem] shadow-2xl space-y-4">
+          <div className="bg-white/95 backdrop-blur-2xl border border-white p-6 rounded-[2.5rem] shadow-2xl space-y-4">
             {navLinks.map((link) => (
               <Link 
                 key={link.path}
                 to={link.path} 
                 onClick={() => setIsOpen(false)}
-                className="block p-4 rounded-2xl hover:bg-blue-50 text-slate-800 font-bold transition-colors"
+                className={`block p-4 rounded-2xl font-bold transition-colors ${
+                  location.pathname === link.path ? 'bg-blue-50 text-blue-600' : 'text-slate-800 hover:bg-blue-50'
+                }`}
               >
                 {link.name}
               </Link>
@@ -106,7 +113,7 @@ const Navbar = () => {
             <Link 
               to="/login" 
               onClick={() => setIsOpen(false)}
-              className="block p-4 bg-blue-600 text-white text-center rounded-2xl font-bold shadow-lg shadow-blue-200"
+              className="block p-4 bg-slate-900 text-white text-center rounded-2xl font-bold shadow-lg"
             >
               Connexion 
             </Link>
