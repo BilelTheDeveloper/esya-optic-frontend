@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -12,16 +12,33 @@ import Booking from './pages/Booking';
 import Dashboard from './pages/admin/Dashboard';
 import Inventory from './pages/admin/Inventory';
 
+// Composant Helper pour gérer l'affichage conditionnel du layout
+const LayoutHandler = ({ children }) => {
+  const location = useLocation();
+  
+  // Liste des routes où l'on veut masquer la Navbar et le Footer (Admin & Login)
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname === '/dashboard';
+  const isLoginRoute = location.pathname === '/login';
+  
+  const hideLayout = isAdminRoute || isLoginRoute;
+
+  return (
+    <>
+      {!hideLayout && <Navbar />}
+      <main className="flex-grow">
+        {children}
+      </main>
+      {!hideLayout && <Footer />}
+    </>
+  );
+};
+
 function App() {
   return (
     /* Conteneur principal Elite avec antialiasing et sélection personnalisée */
     <div className="antialiased text-slate-900 selection:bg-blue-100 selection:text-blue-700 min-h-screen flex flex-col">
       <BrowserRouter>
-        {/* Navbar fixée en haut */}
-        <Navbar />
-        
-        {/* Zone de contenu principale - flex-grow pour pousser le footer vers le bas */}
-        <main className="flex-grow">
+        <LayoutHandler>
           <Routes>
             {/* --- ROUTES PUBLIQUES --- */}
             <Route path="/" element={<Home />} />
@@ -37,7 +54,7 @@ function App() {
             {/* Gestion de l'inventaire et des tendances VTO */}
             <Route path="/admin/inventory" element={<Inventory />} />
 
-            {/* Pages Clients (À créer prochainement) */}
+            {/* Pages Clients (Redirigées vers Dashboard pour l'instant) */}
             <Route path="/admin/clients" element={<Dashboard />} /> 
             <Route path="/admin/bookings" element={<Dashboard />} />
             
@@ -60,10 +77,7 @@ function App() {
               </div>
             } />
           </Routes>
-        </main>
-
-        {/* Le Footer s'affiche sur toutes les pages sauf potentiellement le dashboard si tu veux l'épurer */}
-        <Footer />
+        </LayoutHandler>
       </BrowserRouter>
     </div>
   );
